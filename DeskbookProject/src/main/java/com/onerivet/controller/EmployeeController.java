@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onerivet.model.payload.CityDto;
 import com.onerivet.model.payload.ColumnClassDto;
 import com.onerivet.model.payload.DesignationDto;
 import com.onerivet.model.payload.EmployeeDto;
 import com.onerivet.model.payload.FloorDto;
 import com.onerivet.model.payload.ModeOfWorkDto;
 import com.onerivet.model.payload.SeatNumberDto;
+import com.onerivet.model.payload.UpdateDto;
 import com.onerivet.model.payload.WorkingDayDto;
 import com.onerivet.service.EmployeeService;
 
@@ -52,7 +52,7 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> updateById(@PathVariable("id") int id, @RequestBody EmployeeDto newEmployee)
+	public ResponseEntity<EmployeeDto> updateById(@PathVariable("id") int id, @RequestBody UpdateDto newEmployee)
 			throws Exception {
 		EmployeeDto employeeDto = this.employeeService.updateEmpById(id, newEmployee);
 		return new ResponseEntity<EmployeeDto>(employeeDto, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/get-all-cities")
-	public List<CityDto> getCities() {
+	public List<Integer> getCities() {
 		return this.employeeService.getAllCities();
 	}
 	

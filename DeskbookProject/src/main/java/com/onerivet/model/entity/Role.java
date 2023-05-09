@@ -27,7 +27,7 @@ public class Role {
 	@Column(name = "RoleName")
 	private String roleName;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+	@OneToMany(mappedBy = "role")
 	private Set<EmployeeRoles> roles;
 	
 	

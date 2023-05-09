@@ -41,7 +41,7 @@ public class SeatConfiguration {
 	private ColumnClass column;
 
 	@OneToOne
-	@JoinColumn(name = "SeatNumberId")
+	@JoinColumn(name = "SeatId")
 	private SeatNumber seatNumber;
 	
 	

@@ -1,19 +1,24 @@
 package com.onerivet.model.entity;
 
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "[WorkingDay]", schema = "[Ref]")
 public class WorkingDay {
@@ -23,6 +28,9 @@ public class WorkingDay {
 
 	@Column(name = "Day")
 	private String workingDayName;
+	
+//	@OneToMany(mappedBy = "day")
+//	private Set<EmployeeWorkingDays> days;
 
 	public WorkingDay(String workingDayName) {
 		super();

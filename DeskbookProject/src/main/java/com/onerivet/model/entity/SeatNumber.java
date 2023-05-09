@@ -15,10 +15,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "[SeatNumber]", schema = "[Ref]")
+@Table(name = "[Seat]", schema = "[Ref]")
 public class SeatNumber {
 	@Id
-	@Column(name = "SeatNumberId")
+	@Column(name = "SeatId")
 	private int seatNumberId;
 	
 	@Column(name = "SeatNumber")

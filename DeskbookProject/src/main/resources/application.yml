@@ -4,7 +4,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=DeskBookDemo;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=DeskBookDev;encrypt=true;trustServerCertificate=true
     username: sa
     password: Admin@123
   jpa:

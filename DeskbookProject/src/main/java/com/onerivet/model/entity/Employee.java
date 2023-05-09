@@ -2,6 +2,7 @@ package com.onerivet.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +43,7 @@ public class Employee {
 	@Column(name = "PhoneNumber")
 	private String phoneNumber;
 
-	@Column(name = "Project")
+	@Column(name = "ProjectName")
 	private String project;
 
 
@@ -58,9 +59,13 @@ public class Employee {
 	@JoinColumn(name = "SeatConfigurationId")
 	private SeatConfiguration seatConfiguration;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
-	private Set<EmployeeRoles> roles;
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+//	private Set<EmployeeRoles> roles;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "day")
+	@JsonManagedReference
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
 	private Set<EmployeeWorkingDays> workingDays;
+	
+	@Column(name = "IsActive")
+	private boolean active;
 }

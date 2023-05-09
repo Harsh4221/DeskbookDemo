@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDto {
+public class UpdateDto {
 	private int employeeId;
 
 	private String userId;
@@ -26,17 +26,13 @@ public class EmployeeDto {
 
 	private String project;
 
-	// private String password;
+	private int modeOfWork;
 
-	private ModeOfWorkDto modeOfWork;
+	private int designation;
 
-	private DesignationDto designation;
+	private SeatConfigurationUpdateDto seatConfiguration;
 
-	private SeatConfigurationDto seatConfiguration;
+	private int[] roles;
 
-	private Set<EmployeeRolesDto> roles;
-
-	private Set<EmployeeWorkingDaysDto> workingDays;
-	
-	private boolean active;
+	private int[] workingDays;
 }

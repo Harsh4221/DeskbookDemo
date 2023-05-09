@@ -21,6 +21,6 @@ public class ModeOfWork {
 	@Column(name = "ModeOfWorkId")
 	private int modeOfWorkId;
 	
-	@Column(name = "ModeOfWorkName")
+	@Column(name = "ModeOfWork")
 	private String modeOfWorkName;
 }

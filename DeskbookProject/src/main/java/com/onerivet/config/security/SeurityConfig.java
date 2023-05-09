@@ -20,7 +20,7 @@ public class SeurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
 			.authorizeHttpRequests()
-			.requestMatchers("/api/employees", "/api/employees/**").permitAll()
+			.requestMatchers("/api/employees", "/api/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
