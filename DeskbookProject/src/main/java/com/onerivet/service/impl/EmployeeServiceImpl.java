@@ -1,5 +1,6 @@
 package com.onerivet.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,35 +120,51 @@ public class EmployeeServiceImpl implements EmployeeService {
 		seatConfiguration.setFloor(this.floorRepo.findById(newEmployeeDto.getSeatConfiguration().getFloor()).get());
 		seatConfiguration.setColumn(this.columnClassRepo.findById(newEmployeeDto.getSeatConfiguration().getColumnClass()).get());
 		seatConfiguration.setSeatNumber(this.seatNumberRepo.findById(newEmployeeDto.getSeatConfiguration().getSeatNumber()).get());
+		seatConfiguration.setCreatedBy(employee);
+		seatConfiguration.setModifiedBy(employee);
+		seatConfiguration.setEmployee(employee);
+		seatConfigurationRepo.save(seatConfiguration);
 		
-		employee.setSeatConfiguration(seatConfiguration);
+		employee.setModifiedBy(employee);
 		
-		employee.getSeatConfiguration().setCreatedBy(employee);
-		employee.getSeatConfiguration().setEmployee(employee);
-
-		System.out.println(employee.getWorkingDays());
+//		employee.setSeatConfiguration(seatConfiguration);
+//		
+//		employee.getSeatConfiguration().setCreatedBy(employee);
+//		employee.getSeatConfiguration().setEmployee(employee);
+		List<EmployeeWorkingDays> employeeWorkingDays = employeeWorkingDaysRepo.findByEmployee(employee);
+		
+		for(EmployeeWorkingDays day : employeeWorkingDays) {
+			day.setDeletedBy(employee);
+			day.setDeletedDate(LocalDateTime.now());
+			employeeWorkingDaysRepo.save(day);
+		}
+		//System.out.println(employee.getWorkingDays());
 		if(employee.getModeOfWork().getModeOfWorkName().equalsIgnoreCase("Hybrid")) {
 			Set<EmployeeWorkingDays> days = new HashSet<>();
-			employeeWorkingDaysRepo.deleteByEmployee(employee);
+			//employeeWorkingDaysRepo.deleteByEmployee(employee);
+			
+			
+			
 			for(int i : newEmployeeDto.getWorkingDays()) {
-				
-				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee));
+				employeeWorkingDaysRepo.save(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
+				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
 			}
 			System.out.println(days);
-			employee.setWorkingDays(days);
+			//employee.setWorkingDays(days);
 			
 		} else if(employee.getModeOfWork().getModeOfWorkName().equalsIgnoreCase("Regular")) {
 			Set<EmployeeWorkingDays> days = new HashSet<>();
-			employeeWorkingDaysRepo.deleteByEmployee(employee);
+			//employeeWorkingDaysRepo.deleteByEmployee(employee);
 			for(int i=1;i<=5;i++) {
-				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee));
+				employeeWorkingDaysRepo.save(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
+				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
 			}
-			employee.setWorkingDays(days);
+			//employee.setWorkingDays(days);
 		} 
 		
-		System.out.println(employee.getWorkingDays());
+		//System.out.println(employee.getWorkingDays());
 		Employee save = this.employeeRepo.save(employee);
-System.out.println(save.getWorkingDays());
+		//System.out.println(save.getWorkingDays());
 		return this.modelMapper.map(save, EmployeeDto.class);
 	}
 

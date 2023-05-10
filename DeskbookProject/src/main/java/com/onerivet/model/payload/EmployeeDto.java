@@ -32,7 +32,7 @@ public class EmployeeDto {
 
 	private DesignationDto designation;
 
-	private SeatConfigurationDto seatConfiguration;
+//	private SeatConfigurationDto seatConfiguration;
 
 	private Set<EmployeeRolesDto> roles;
 

@@ -1,5 +1,7 @@
 package com.onerivet.model.entity;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -44,13 +46,28 @@ public class EmployeeWorkingDays {
 	@JoinColumn(name = "CreatedBy")
 	private Employee createdBy;
 	
+	@OneToOne
+	@JoinColumn(name = "ModifiedBy")
+	private Employee modifiedBy;
+	
+	@Column(name = "ModifiedDate")
+	private LocalDateTime modifiedDate;
+	
+	@OneToOne
+	@JoinColumn(name = "DeletedBy")
+	private Employee deletedBy;
+	
+	@Column(name = "DeletedDate")
+	private LocalDateTime deletedDate;
 
-
-	public EmployeeWorkingDays(Employee employee, WorkingDay day, Employee createdBy) {
+	public EmployeeWorkingDays(Employee employee, WorkingDay day, Employee createdBy, Employee modifiedBy,
+			LocalDateTime modifiedDate) {
 		super();
 		this.employee = employee;
 		this.day = day;
 		this.createdBy = createdBy;
+		this.modifiedBy = modifiedBy;
+		this.modifiedDate = modifiedDate;
 	}
 	
 }

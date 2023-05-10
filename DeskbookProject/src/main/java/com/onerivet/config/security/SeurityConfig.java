@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -51,5 +53,17 @@ public class SeurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10);
 	}
+	
+//	@Bean
+//	WebMvcConfigurer webMvcConfigurer() {
+//		return new WebMvcConfigurer() {
+//
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				// TODO Auto-generated method stub
+//				WebMvcConfigurer.super.addCorsMappings(registry);
+//			}
+//		};
+//	}
 	
 }

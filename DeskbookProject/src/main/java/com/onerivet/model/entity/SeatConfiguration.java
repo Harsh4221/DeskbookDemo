@@ -52,7 +52,10 @@ public class SeatConfiguration {
 	@OneToOne
 	@JoinColumn(name = "CreatedBy")
 	private Employee createdBy;
-
-
 	
+	@OneToOne
+	@JoinColumn(name = "ModifiedBy")
+	private Employee modifiedBy;
+	
+
 }

@@ -55,16 +55,20 @@ public class Employee {
 	@JoinColumn(name = "DesignationId")
 	private Designation designation;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
-	@JoinColumn(name = "SeatConfigurationId")
-	private SeatConfiguration seatConfiguration;
+//	@OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
+//	@JoinColumn(name = "SeatConfigurationId")
+//	private SeatConfiguration seatConfiguration;
 
 //	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
 //	private Set<EmployeeRoles> roles;
 
-	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
-	private Set<EmployeeWorkingDays> workingDays;
+	//@JsonManagedReference
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+//	private Set<EmployeeWorkingDays> workingDays;
+	
+	@OneToOne
+	@JoinColumn(name = "ModifiedBy")
+	private Employee modifiedBy;
 	
 	@Column(name = "IsActive")
 	private boolean active;
