@@ -1,15 +1,10 @@
 package com.onerivet.model.entity;
 
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -69,6 +64,9 @@ public class Employee {
 	@OneToOne
 	@JoinColumn(name = "ModifiedBy")
 	private Employee modifiedBy;
+	
+	@Column(name = "ModifiedDate")
+	private LocalDateTime modifiedDate;
 	
 	@Column(name = "IsActive")
 	private boolean active;

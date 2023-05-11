@@ -3,6 +3,8 @@ package com.onerivet.model.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,13 @@ public class SeatNumber {
 	
 	@Column(name = "SeatNumber")
 	private String seatNumber;
+	
+	@OneToOne
+	@JoinColumn(name = "ColumnId")
+	private ColumnClass column;
+	
+	@Column(name = "IsAvailable")
+	private boolean isAvailable;
 	
 	@Transient
 	private boolean booked;

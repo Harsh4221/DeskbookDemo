@@ -2,6 +2,7 @@ package com.onerivet.service;
 
 import java.util.List;
 
+import com.onerivet.model.payload.CityDto;
 import com.onerivet.model.payload.ColumnClassDto;
 import com.onerivet.model.payload.DesignationDto;
 import com.onerivet.model.payload.EmployeeDto;
@@ -25,13 +26,13 @@ public interface EmployeeService {
 	
 	public List<ModeOfWorkDto> getAllModeOfWorks();
 	
-	public List<Integer> getAllCities();
+	public List<CityDto> getAllCities();
 	
-	public List<FloorDto> getAllFloors();
+	public List<FloorDto> getAllFloors(int city);
 	
-	public List<ColumnClassDto> getAllColumns();
+	public List<ColumnClassDto> getAllColumns(int floor);
 	
-	public List<SeatNumberDto> getAllSeatNumbers();
+	public List<SeatNumberDto> getAllSeatNumbers(int column);
 	
 	public List<WorkingDayDto> getAllWorkingDays();
 }

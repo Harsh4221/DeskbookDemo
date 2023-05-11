@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.onerivet.exception.ResourceNotFoundException;
+import com.onerivet.model.entity.ColumnClass;
 import com.onerivet.model.entity.Employee;
 import com.onerivet.model.entity.EmployeeWorkingDays;
+import com.onerivet.model.entity.Floor;
 import com.onerivet.model.entity.SeatConfiguration;
-import com.onerivet.model.entity.WorkingDay;
+import com.onerivet.model.entity.SeatNumber;
+import com.onerivet.model.payload.CityDto;
 import com.onerivet.model.payload.ColumnClassDto;
 import com.onerivet.model.payload.DesignationDto;
 import com.onerivet.model.payload.EmployeeDto;
@@ -64,10 +67,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private WorkingDaysRepo workingDaysRepo;
-	
+
 	@Autowired
 	private SeatConfigurationRepo seatConfigurationRepo;
-	
+
 	@Autowired
 	private EmployeeWorkingDaysRepo employeeWorkingDaysRepo;
 
@@ -102,12 +105,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee employee = this.employeeRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee With id " + id + " not found."));
 
-		SeatConfiguration seatConfiguration;
-		seatConfiguration = this.seatConfigurationRepo.findByEmployee(employee);
-		
-		if(seatConfiguration == null)
-			seatConfiguration = new SeatConfiguration();
-		
 		employee.setFirstName(newEmployeeDto.getFirstName());
 		employee.setLastName(newEmployeeDto.getLastName());
 		employee.setPhoneNumber(newEmployeeDto.getPhoneNumber());
@@ -115,56 +112,47 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		employee.setDesignation(this.designationRepo.findById(newEmployeeDto.getDesignation()).get());
 		employee.setModeOfWork(this.modeOfWorkRepo.findById(newEmployeeDto.getModeOfWork()).get());
-		
-		seatConfiguration.setCity(this.cityRepo.findById(newEmployeeDto.getSeatConfiguration().getCity()).get());
-		seatConfiguration.setFloor(this.floorRepo.findById(newEmployeeDto.getSeatConfiguration().getFloor()).get());
-		seatConfiguration.setColumn(this.columnClassRepo.findById(newEmployeeDto.getSeatConfiguration().getColumnClass()).get());
-		seatConfiguration.setSeatNumber(this.seatNumberRepo.findById(newEmployeeDto.getSeatConfiguration().getSeatNumber()).get());
-		seatConfiguration.setCreatedBy(employee);
-		seatConfiguration.setModifiedBy(employee);
-		seatConfiguration.setEmployee(employee);
-		seatConfigurationRepo.save(seatConfiguration);
-		
+
 		employee.setModifiedBy(employee);
+		employee.setModifiedDate(LocalDateTime.now());
 		
-//		employee.setSeatConfiguration(seatConfiguration);
-//		
-//		employee.getSeatConfiguration().setCreatedBy(employee);
-//		employee.getSeatConfiguration().setEmployee(employee);
-		List<EmployeeWorkingDays> employeeWorkingDays = employeeWorkingDaysRepo.findByEmployee(employee);
 		
-		for(EmployeeWorkingDays day : employeeWorkingDays) {
-			day.setDeletedBy(employee);
-			day.setDeletedDate(LocalDateTime.now());
-			employeeWorkingDaysRepo.save(day);
-		}
-		//System.out.println(employee.getWorkingDays());
+		SeatNumber seatNumber = this.seatNumberRepo.findById(newEmployeeDto.getSeatConfiguration().getSeatNumber())
+				.get();
+
+		SeatConfiguration seatConfiguration = this.seatConfigurationRepo.findBySeatNumber(seatNumber);
+		
+		
+		if (seatConfiguration == null) {
+			seatConfiguration = new SeatConfiguration();
+		} 
+		
+		if(seatConfiguration.getEmployee()!=null && seatConfiguration.getEmployee().getEmployeeId() != employee.getEmployeeId())
+			throw new ResourceNotFoundException("Already Booked");
+			
+		seatConfiguration.setCreatedBy(employee);
+		seatConfiguration.setEmployee(employee);
+		seatConfiguration.setModifiedBy(employee);
+		seatConfiguration.setModifiedDate(LocalDateTime.now());
+		seatConfiguration.setSeatNumber(seatNumber);
+		
+		
 		if(employee.getModeOfWork().getModeOfWorkName().equalsIgnoreCase("Hybrid")) {
-			Set<EmployeeWorkingDays> days = new HashSet<>();
-			//employeeWorkingDaysRepo.deleteByEmployee(employee);
+			List<EmployeeWorkingDays> employeeWorkingDays = employeeWorkingDaysRepo.findByEmployee(employee);
 			
-			
+			for(EmployeeWorkingDays day : employeeWorkingDays) {
+				day.setDeletedBy(employee);
+				day.setDeletedDate(LocalDateTime.now());
+				employeeWorkingDaysRepo.save(day);
+			}
 			
 			for(int i : newEmployeeDto.getWorkingDays()) {
 				employeeWorkingDaysRepo.save(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
-				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
-			}
-			System.out.println(days);
-			//employee.setWorkingDays(days);
-			
-		} else if(employee.getModeOfWork().getModeOfWorkName().equalsIgnoreCase("Regular")) {
-			Set<EmployeeWorkingDays> days = new HashSet<>();
-			//employeeWorkingDaysRepo.deleteByEmployee(employee);
-			for(int i=1;i<=5;i++) {
-				employeeWorkingDaysRepo.save(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
-				days.add(new EmployeeWorkingDays(employee, this.workingDaysRepo.findById(i).get(), employee, employee, LocalDateTime.now()));
-			}
-			//employee.setWorkingDays(days);
-		} 
+			}	
+		}
 		
-		//System.out.println(employee.getWorkingDays());
 		Employee save = this.employeeRepo.save(employee);
-		//System.out.println(save.getWorkingDays());
+		seatConfigurationRepo.save(seatConfiguration);
 		return this.modelMapper.map(save, EmployeeDto.class);
 	}
 
@@ -183,31 +171,44 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<Integer> getAllCities() {
-//		return this.cityRepo.findAll().stream().map((city) -> this.modelMapper.map(city, CityDto.class))
-//				.collect(Collectors.toList());
-		return this.cityRepo.getAllCities();
-	}
-
-	@Override
-	public List<FloorDto> getAllFloors() {
-		return this.floorRepo.findAll().stream().map((floor) -> this.modelMapper.map(floor, FloorDto.class))
+	public List<CityDto> getAllCities() {
+		return this.cityRepo.findAll().stream().map((city) -> this.modelMapper.map(city, CityDto.class))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<ColumnClassDto> getAllColumns() {
-		return this.columnClassRepo.findAll().stream()
-				.map((column) -> this.modelMapper.map(column, ColumnClassDto.class)).collect(Collectors.toList());
+	public List<FloorDto> getAllFloors(int city) {
+
+		List<Floor> floors = this.floorRepo.findByCity(this.cityRepo.findById(city).get());
+
+		return floors.stream().map((floor) -> this.modelMapper.map(floor, FloorDto.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<SeatNumberDto> getAllSeatNumbers() {
-		List<SeatNumberDto> seatNumbers = this.seatNumberRepo.findAll().stream()
-				.map((seatNumber) -> this.modelMapper.map(seatNumber, SeatNumberDto.class))
-				.collect(Collectors.toList());
+	public List<ColumnClassDto> getAllColumns(int floor) {
 
-		return seatNumbers;
+		List<ColumnClass> columns = this.columnClassRepo.findByFloor(this.floorRepo.findById(floor).get());
+
+		return columns.stream().map((column) -> this.modelMapper.map(column, ColumnClassDto.class))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<SeatNumberDto> getAllSeatNumbers(int column) {
+		List<SeatNumber> seats = this.seatNumberRepo.findByColumn(this.columnClassRepo.findById(column).get());
+
+		List<SeatNumber> bookedSeats = this.seatConfigurationRepo.findSeats(seats);
+
+		for (int i = 0, j = 0; j < bookedSeats.size();) {
+			if (seats.get(i).getSeatNumberId() == bookedSeats.get(j).getSeatNumberId()) {
+				seats.get(i).setBooked(true);
+				j++;
+			}
+			i++;
+		}
+
+		return seats.stream().map((seat) -> this.modelMapper.map(seat, SeatNumberDto.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.onerivet.model.payload.CityDto;
 import com.onerivet.model.payload.ColumnClassDto;
 import com.onerivet.model.payload.DesignationDto;
 import com.onerivet.model.payload.EmployeeDto;
@@ -58,37 +59,37 @@ public class EmployeeController {
 		return new ResponseEntity<EmployeeDto>(employeeDto, HttpStatus.OK);
 	}
 	
-	@GetMapping("/get-all-designations")
+	@GetMapping("/designations")
 	public List<DesignationDto> getDesignations(){
 		return this.employeeService.getAllDesignations();
 	}
 	
-	@GetMapping("/get-all-cities")
-	public List<Integer> getCities() {
+	@GetMapping("/cities")
+	public List<CityDto> getCities() {
 		return this.employeeService.getAllCities();
 	}
 	
-	@GetMapping("/get-all-mode-of-works")
+	@GetMapping("/mode-of-works")
 	public List<ModeOfWorkDto> getModeOfWorks() {
 		return this.employeeService.getAllModeOfWorks();
 	}
 	
-	@GetMapping("/get-all-floors")
-	public List<FloorDto> getFloors() {
-		return this.employeeService.getAllFloors();
+	@GetMapping("/floors/{cityId}")
+	public List<FloorDto> getFloors(@PathVariable int cityId) {
+		return this.employeeService.getAllFloors(cityId);
 	}
 	
-	@GetMapping("/get-all-columns")
-	public List<ColumnClassDto> getColumns() {
-		return this.employeeService.getAllColumns();
+	@GetMapping("/columns/{floorId}")
+	public List<ColumnClassDto> getColumns(@PathVariable int floorId) {
+		return this.employeeService.getAllColumns(floorId);
 	}
 	
-	@GetMapping("/get-all-seats")
-	public List<SeatNumberDto> getSeatNumbers() {
-		return this.employeeService.getAllSeatNumbers();
+	@GetMapping("/seats/{columnId}")
+	public List<SeatNumberDto> getSeatNumbers(@PathVariable int columnId) {
+		return this.employeeService.getAllSeatNumbers(columnId);
 	}
 
-	@GetMapping("/get-all-working-days")
+	@GetMapping("/working-days")
 	public List<WorkingDayDto> getWorkinfDays() {
 		return this.employeeService.getAllWorkingDays();
 	}
