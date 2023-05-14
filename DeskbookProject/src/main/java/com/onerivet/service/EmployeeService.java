@@ -8,6 +8,7 @@ import com.onerivet.model.payload.DesignationDto;
 import com.onerivet.model.payload.EmployeeDto;
 import com.onerivet.model.payload.FloorDto;
 import com.onerivet.model.payload.ModeOfWorkDto;
+import com.onerivet.model.payload.ProfileViewDto;
 import com.onerivet.model.payload.SeatNumberDto;
 import com.onerivet.model.payload.UpdateDto;
 import com.onerivet.model.payload.WorkingDayDto;
@@ -16,11 +17,11 @@ public interface EmployeeService {
 	
 	public List<EmployeeDto> getAllEmployees();
 	
-	public EmployeeDto getEmpById(int id);
+	public ProfileViewDto getEmpById(String id) throws Exception;
 	
-	public EmployeeDto deleteEmpById(int id);
+	public EmployeeDto deleteEmpById(String id);
 	
-	public EmployeeDto updateEmpById(int id, UpdateDto newEmployeeDto) throws Exception;
+	public ProfileViewDto updateEmpById(String id, UpdateDto newEmployeeDto) throws Exception;
 	
 	public List<DesignationDto> getAllDesignations();
 	

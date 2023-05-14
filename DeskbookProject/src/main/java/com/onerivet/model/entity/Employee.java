@@ -21,10 +21,7 @@ import lombok.Setter;
 public class Employee {
 	@Id
 	@Column(name = "EmployeeId")
-	private int employeeId;
-
-	@Column(name = "UserId")
-	private String userId;
+	private String employeeId;
 
 	@Column(name = "EmailId")
 	private String emailId;
@@ -41,6 +38,11 @@ public class Employee {
 	@Column(name = "ProjectName")
 	private String project;
 
+	@Column(name = "ProfilePictureFileName")
+	private String profilePictureFileName;
+	
+	@Column(name = "ProfilePictureFilePath")
+	private String profilePictureFilePath;
 
 	@OneToOne
 	@JoinColumn(name = "ModeOfWorkId")
